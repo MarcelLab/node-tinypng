@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "minimist": "0.0.8",
-    "prompt": "~0.2.12",
-    "co-prompt": "~1.0.0"
+    "prompt": "~0.2.12"
   }
 }
