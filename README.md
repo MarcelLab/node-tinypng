@@ -14,7 +14,7 @@ Install
 
 install globally using npm
 
-    npm install -g git+https://github.com/MarcelLab/node-
+    npm install -g git+https://github.com/MarcelLab/node-tinypng.git
 
 
 Use
