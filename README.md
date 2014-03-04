@@ -14,7 +14,7 @@ Install
 
 install globally using npm
 
-    npm install -g
+    npm install -g git+https://github.com/MarcelLab/node-
 
 
 Use
@@ -23,3 +23,4 @@ Use
     # go to your project folder
     $ cd path/to/project
     # launch the binary
+    $ tinypng
