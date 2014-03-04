@@ -26,10 +26,10 @@ Use
 
 the script will then ask for a few informations :
 
->   api key
->   input folder (relative to the path the process is launched)
->   save config for later use
->   abort - remind the user to backup his files before actually calling the service
+-   api key
+-   input folder (relative to the path the process is launched)
+-   save config for later use
+-   abort - remind the user to backup his files before actually calling the service
 
 
 @TODOS
