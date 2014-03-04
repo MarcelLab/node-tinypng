@@ -1,0 +1,121 @@
+#!/usr/bin/env node
+var minimist = require('minimist'),
+    prompt = require('prompt'),
+    fs = require('fs'),
+    path = require('path'),
+    helpers = require('./lib/helpers'),
+    tinyClient = require('./lib/tiny-client');
+
+// DEFAULTS
+var configFile = path.join(process.cwd(), '.tinypng.conf');
+
+var config = {
+    apiKey: false,
+    folder: false
+};
+
+var savedConfig, argvConfig, promptConfig;
+var persist = false, persisted = false;
+
+/**
+ *  find saved configuration
+ *  keep it synchronous
+ */
+if (fs.existsSync(configFile)) {
+    persisted = true;
+    var savedConfig = JSON.parse(fs.readFileSync(configFile, { encoding: 'utf-8' }));
+
+    for (var key in savedConfig) {
+        config[key] = savedConfig[key];
+    }
+}
+
+/**
+ *  handle command arguments
+ */
+var argv = minimist(process.argv.slice(2));
+
+Object.keys(argv).forEach(function(arg, index) {
+    switch (arg) {
+        case 'apikey':
+            // use the api for the current script execution
+            config.apiKey = argv[arg];
+            break;
+        case 'folder':
+            // define the folder to be parsed
+            config.folder = argv[arg];
+            break;
+        case 'save':
+            // save config for subsequent use
+            persist = true;
+            break;
+    }
+});
+
+/**
+ *  promp if configuration informations are missing
+ */
+var promptQuestions = {
+    apiKey: {
+        description: 'provide you API key',
+        required: true,
+
+    },
+    folder: {
+        description: 'define your input folder',
+        required: true,
+
+    },
+    save: {
+        description: 'save config (y/n) ?',
+        required: true,
+        pattern: /^(y|n)$/,
+        default: 'y'
+    },
+    abort: {
+        description: 'all your images will be overriden, you should create some backup\n\tabort (y/n) ?',
+        required: true,
+        pattern: /^(y|n)$/,
+        default: 'n'
+    }
+}
+
+for (var key in config) {
+    if (config[key]) { promptQuestions[key]['default'] = config[key]; }
+}
+
+
+prompt.message = 'tinypng'.red;
+prompt.start();
+
+prompt.get({ properties: promptQuestions }, function(err, results) {
+
+    if (results.abort === 'y') {
+        console.log('   - tinypng --> operation aborted')
+        process.exit();
+    }
+
+    config.apiKey = results.apiKey;
+    config.folder = results.folder;
+    config.save = (results.save === 'y') ? true : false;
+
+    // console.log(config);
+
+    for (var key in config) {
+        if (config[key] === false) {
+            console.error('   - tinypng --> missing "%s" configuration', key);
+            process.exit(0);
+        }
+    }
+
+    // persist config
+    if (persist) {
+        fs.writeFileSync(configFile, JSON.stringify(config));
+    }
+
+    // find all .png files in input folder
+    var files = helpers.find(path.join(process.cwd(), config.folder), /.png$/);
+    // call the tinypng API
+    tinyClient(files, config);
+});
+

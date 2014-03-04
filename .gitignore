@@ -1,0 +1,6 @@
+.DS_Store
+Thumbs.db
+.tinypng.conf
+node_modules/*
+samples/
+test/

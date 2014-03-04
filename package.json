@@ -1,0 +1,20 @@
+{
+  "name": "tinypng",
+  "version": "0.1.0",
+  "description": "'simple utility for tinypng'",
+  "main": "tinypng.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Benjamin Matuszewski",
+  "license": "ISC",
+  "preferGlobal": "true",
+  "bin": {
+    "tiny": "tinypng.js"
+  },
+  "dependencies": {
+    "minimist": "0.0.8",
+    "prompt": "~0.2.12",
+    "co-prompt": "~1.0.0"
+  }
+}
